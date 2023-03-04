@@ -1,0 +1,34 @@
+package com.sparta.snackback.dm.controller;
+
+import com.sparta.snackback.dm.dto.DmMessageDto;
+import com.sparta.snackback.dm.entity.DmMessage;
+import com.sparta.snackback.dm.repository.DmMessageRepository;
+import com.sparta.snackback.dm.service.DmMessageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@Slf4j
+public class DmMessageController {
+
+    private final SimpMessageSendingOperations sendingOperations;
+    private final DmMessageService dmMessageService;
+
+    private final DmMessageRepository dmMessageRepository;
+    @MessageMapping("/chat/message")
+    public void enter(DmMessageDto message) {
+        log.info(message.getUser() + " : " + message.getMessage());
+
+//        if (DmMessageDto.MessageType.ENTER.equals(message.getType())) {
+//            message.setMessage(message.getUser() + "님이 입장하셨습니다.");
+//        }
+
+//        DmMessage dmMessage = dmMessageRepository.saveAndFlush(new DmMessage(message));
+        sendingOperations.convertAndSend("/topic/chat/room/"+message.getDmId(),message);
+        dmMessageService.sendDmMessage(message);
+    }
+}
