@@ -8,7 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,12 +27,13 @@ public class DmMessageController {
     public void enter(DmMessageDto message) {
         log.info(message.getUser() + " : " + message.getMessage());
 
-//        if (DmMessageDto.MessageType.ENTER.equals(message.getType())) {
-//            message.setMessage(message.getUser() + "님이 입장하셨습니다.");
-//        }
-
-//        DmMessage dmMessage = dmMessageRepository.saveAndFlush(new DmMessage(message));
         sendingOperations.convertAndSend("/topic/chat/room/"+message.getDmId(),message);
         dmMessageService.sendDmMessage(message);
     }
+
+    @GetMapping("/chat/message/enter/{dmId}")
+    public List<DmMessageDto> getMessages(@PathVariable Long dmId){
+        return dmMessageService.getMessages(dmId);
+    }
+
 }

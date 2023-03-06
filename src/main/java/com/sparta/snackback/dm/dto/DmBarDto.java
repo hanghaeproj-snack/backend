@@ -12,14 +12,15 @@ import java.util.UUID;
 @Setter
 public class DmBarDto {
 
-    private String dmId;
+    private Long dmId;
     private String title;
     private Set<WebSocketSession> sessionSet = new HashSet<>();
 
     public static DmBarDto creat(String title){
         DmBarDto dmBarDto = new DmBarDto();
 
-        dmBarDto.dmId = UUID.randomUUID().toString();
+//        dmBarDto.dmId = UUID.randomUUID().toString();
+//        this.dmId =
         dmBarDto.title = title;
         return dmBarDto;
 

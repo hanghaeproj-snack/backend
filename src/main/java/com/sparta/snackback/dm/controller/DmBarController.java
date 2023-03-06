@@ -44,6 +44,7 @@ public class DmBarController {
     //dm 입장 화면
     @GetMapping("/room/enter/{roomId}")
     public String roomDetail(Model model, @PathVariable Long roomId) {
+
         model.addAttribute("roomId", roomId);
         return "/chat/roomdetail";
     }
