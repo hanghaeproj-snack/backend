@@ -16,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,7 +37,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
+//                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -52,12 +55,37 @@ public class WebSecurityConfig {
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
+        http.cors();
 
 //        http.formLogin().loginPage("/api/user/login-page").permitAll();
 //
 //        http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.addAllowedOrigin("http://localhost:3000");
+
+        config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
+
+        config.addAllowedMethod("*");
+
+        config.addAllowedHeader("Content-Type");
+        config.addAllowedHeader(JwtUtil.AUTHORIZATION_HEADER);
+
+        config.setAllowCredentials(true);
+
+        config.validateAllowCredentials();
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
     }
 
 }
