@@ -70,7 +70,7 @@ public class UserService {
 
         // response body
         LoginResponseDto loginResponseDto = new LoginResponseDto(user);
-        return loginResponseDto;
+        return loginResponseDto; // 로그인 -> body에 email, nickname 반환
     }
 
     // 중복확인
