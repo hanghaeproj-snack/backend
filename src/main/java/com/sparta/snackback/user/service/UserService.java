@@ -1,6 +1,7 @@
 package com.sparta.snackback.user.service;
 
 import com.sparta.snackback.user.dto.LoginRequestDto;
+import com.sparta.snackback.user.dto.LoginResponseDto;
 import com.sparta.snackback.user.dto.SignupRequestDto;
 import com.sparta.snackback.user.dto.StatusMsgResponseDto;
 import com.sparta.snackback.user.entity.User;
@@ -52,7 +53,7 @@ public class UserService {
 
     // 로그인
     @Transactional(readOnly = true)
-    public StatusMsgResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
@@ -68,8 +69,8 @@ public class UserService {
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail(), user.getRole()));
 
         // response body
-        StatusMsgResponseDto statusMsgResponseDto = new StatusMsgResponseDto("로그인 성공", HttpStatus.OK);
-        return statusMsgResponseDto;
+        LoginResponseDto loginResponseDto = new LoginResponseDto(user);
+        return loginResponseDto;
     }
 
     // 중복확인
