@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ChannelService {
@@ -21,4 +24,19 @@ public class ChannelService {
         return ResponseEntity.ok(new ChannelRoomDto.Response(channel));
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ChannelRoomDto.Response>> showChannels() {
+        List<Channel> channels = channelRepository.findAll();
+
+        if (channels.size() == 0) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+
+        List<ChannelRoomDto.Response> channelRoomDtoList = new ArrayList<>(channels.size());
+        for (Channel channel : channels) {
+            channelRoomDtoList.add(new ChannelRoomDto.Response(channel));
+        }
+
+        return ResponseEntity.ok(channelRoomDtoList);
+    }
 }

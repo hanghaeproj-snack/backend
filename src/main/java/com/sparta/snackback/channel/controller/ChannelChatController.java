@@ -1,6 +1,6 @@
 package com.sparta.snackback.channel.controller;
 
-import com.sparta.snackback.channel.dto.ChannelChatMessage;
+import com.sparta.snackback.channel.dto.ChannelChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +20,7 @@ public class ChannelChatController {
 
     // 채널 채팅방 입장 API
     @MessageMapping("/channel/chat/enter")
-    public void enter(ChannelChatMessage message) {
+    public void enter(ChannelChatMessageDto message) {
         log.info("### {}", message.getSender() + " 참여");
         message.setDate(message.getSender() + " 참여");
         template.convertAndSend("/sub/topic/channel/room/" + message.getRoomId(), message);
@@ -28,7 +28,7 @@ public class ChannelChatController {
 
     // 채널 채팅방 채팅 API
     @MessageMapping("/channel/chat/message")
-    public void message(ChannelChatMessage message) {
+    public void message(ChannelChatMessageDto message) {
         log.info("### {}", message.getSender() + ": " + message.getDate());
         template.convertAndSend("/sub/topic/channel/room/" + message.getRoomId(), message);
     }

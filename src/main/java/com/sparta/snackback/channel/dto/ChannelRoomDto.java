@@ -23,10 +23,12 @@ public class ChannelRoomDto {
     @Getter
     public static class Response {
 
+        private final Long id;
         private final String uuid;
         private final String title;
 
         public Response(Channel channel) {
+            this.id = channel.getId();
             this.uuid = channel.getUuid();
             this.title = channel.getTitle();
         }

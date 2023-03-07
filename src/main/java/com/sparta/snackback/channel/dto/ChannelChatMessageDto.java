@@ -3,7 +3,7 @@ package com.sparta.snackback.channel.dto;
 import lombok.Getter;
 
 @Getter
-public class ChannelChatMessage {
+public class ChannelChatMessageDto {
 
     public enum MessageType {
         ENTER, TALK
