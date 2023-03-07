@@ -2,44 +2,40 @@ package com.sparta.snackback.user.controller;
 
 import com.sparta.snackback.user.dto.LoginRequestDto;
 import com.sparta.snackback.user.dto.SignupRequestDto;
+import com.sparta.snackback.user.dto.StatusMsgResponseDto;
 import com.sparta.snackback.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
 
-    // 회원가입 페이지 반환
-    @GetMapping("/signup")
-    public ModelAndView signupPage() {
-        return new ModelAndView("signup");
-    }
-
-    // 로그인 페이지 반환
-    @GetMapping("/login")
-    public ModelAndView loginPage() {
-        return new ModelAndView("login");
-    }
-
     // 회원가입
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
-        userService.signup(signupRequestDto);
-        return "redirect:/api/auth/login";
+    public StatusMsgResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
+        return userService.signup(signupRequestDto);
     }
 
     // 로그인
-    @ResponseBody
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
-        return "success";
+    public StatusMsgResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        return userService.login(loginRequestDto, response);
+    }
+
+    // 중복확인
+    @PostMapping("/check")
+    public StatusMsgResponseDto emailCheck(@RequestBody LoginRequestDto loginRequestDto) {
+        userService.emailCheck(loginRequestDto);
+        StatusMsgResponseDto statusMsgResponseDto = new StatusMsgResponseDto("이메일 중복확인 완료", HttpStatus.OK);
+        return statusMsgResponseDto;
     }
 }

@@ -1,18 +1,21 @@
-package com.sparta.snackback.user.jwt;
+package com.sparta.snackback.jwt;
 
+
+import com.sparta.snackback.security.UserDetailsServiceImpl;
 import com.sparta.snackback.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -21,6 +24,8 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
+    private final UserDetailsServiceImpl userDetailsService;
+
     public static final String AUTHORIZATION_HEADER = "Authorization"; // Header key
     public static final String AUTHORIZATION_KEY = "auth"; // 사용자 권한값 Key
     private static final String BEARER_PREFIX = "Bearer"; // Token 식별자
@@ -78,7 +83,13 @@ public class JwtUtil {
     }
 
     // 토큰에서 사용자 정보 가져오기
-    public Claims getUserInfoFormToken(String token) {
+    public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token).getBody();
+    }
+
+    // 인증 객체 생성
+    public Authentication createAuthentication(String username) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
