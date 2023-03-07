@@ -1,6 +1,7 @@
 package com.sparta.snackback.user.controller;
 
 import com.sparta.snackback.user.dto.LoginRequestDto;
+import com.sparta.snackback.user.dto.LoginResponseDto;
 import com.sparta.snackback.user.dto.SignupRequestDto;
 import com.sparta.snackback.user.dto.StatusMsgResponseDto;
 import com.sparta.snackback.user.service.UserService;
@@ -27,7 +28,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public StatusMsgResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto, response);
     }
 

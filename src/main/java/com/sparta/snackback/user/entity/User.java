@@ -19,10 +19,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false) // 닉네임 중복가능
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
