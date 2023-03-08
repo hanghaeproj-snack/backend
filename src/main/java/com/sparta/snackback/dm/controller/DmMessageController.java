@@ -23,7 +23,7 @@ public class DmMessageController {
 
     @MessageMapping("/chat/message")
     public void enter(DmMessageDto message) {
-        log.info(message.getUser() + " : " + message.getMessage());
+        log.info(message.getNickname() + " : " + message.getMessage());
 
         sendingOperations.convertAndSend("/topic/chat/room/"+message.getDmId(),message);
         dmMessageService.sendDmMessage(message);

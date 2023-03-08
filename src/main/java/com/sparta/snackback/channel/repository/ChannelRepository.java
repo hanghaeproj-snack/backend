@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
     Optional<Channel> findByTitle(String title);
+    Optional<Channel> findByUuid(String roomId);
 }

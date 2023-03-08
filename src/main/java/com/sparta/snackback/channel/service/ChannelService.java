@@ -1,9 +1,12 @@
 package com.sparta.snackback.channel.service;
 
+import com.sparta.snackback.channel.dto.ChannelChatMessageDto;
 import com.sparta.snackback.channel.dto.ChannelRoomDto;
 import com.sparta.snackback.channel.entity.Channel;
 import com.sparta.snackback.channel.entity.ChannelJoiner;
+import com.sparta.snackback.channel.entity.ChannelMessage;
 import com.sparta.snackback.channel.repository.ChannelJoinerRepository;
+import com.sparta.snackback.channel.repository.ChannelMessageRepository;
 import com.sparta.snackback.channel.repository.ChannelRepository;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.repository.UserRepository;
@@ -22,6 +25,7 @@ public class ChannelService {
 
     private final ChannelRepository channelRepository;
     private final ChannelJoinerRepository channelJoinerRepository;
+    private final ChannelMessageRepository channelMessageRepository;
 
     private final UserRepository userRepository;
 
@@ -75,7 +79,13 @@ public class ChannelService {
         Channel Message
      */
     @Transactional
-    public void saveChannelMessage() {
+    public ChannelChatMessageDto.Subscriber saveChannelMessage(ChannelChatMessageDto.Publisher publisher) {
+        Channel channel = channelRepository.findByUuid(publisher.getRoomId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채널"));
+        
+        // 유저 존재 여부
+        User user = userRepository.findById(publisher.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
 
+        ChannelMessage channelMessage = channelMessageRepository.save(new ChannelMessage(channel, user, publisher));
+        return new ChannelChatMessageDto.Subscriber(channelMessage);
     }
 }
