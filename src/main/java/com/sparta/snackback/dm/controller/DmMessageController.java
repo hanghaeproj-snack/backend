@@ -1,7 +1,6 @@
 package com.sparta.snackback.dm.controller;
 
 import com.sparta.snackback.dm.dto.DmMessageDto;
-import com.sparta.snackback.dm.entity.DmMessage;
 import com.sparta.snackback.dm.repository.DmMessageRepository;
 import com.sparta.snackback.dm.service.DmMessageService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class DmMessageController {
     private final SimpMessageSendingOperations sendingOperations;
     private final DmMessageService dmMessageService;
 
-    private final DmMessageRepository dmMessageRepository;
     @MessageMapping("/chat/message")
     public void enter(DmMessageDto message) {
         log.info(message.getUser() + " : " + message.getMessage());

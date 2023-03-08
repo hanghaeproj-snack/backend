@@ -6,27 +6,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class DmBar extends Timestamped {
+public class DM extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dmId;
+    private Long id;
 
     private String title;
 
-    private String username;
+    @Column(nullable = false, unique = true)
+    private String uuid;
 
-    public  DmBar (String title){
-        this.title = title;
+
+    public DM(String uuid) {
+        this.uuid = uuid;
     }
-
-//    @ManyToOne
-//    @JoinColumn(name="user_id")
-//    private User user;
-
 }
