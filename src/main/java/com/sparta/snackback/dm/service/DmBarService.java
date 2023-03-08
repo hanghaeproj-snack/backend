@@ -1,10 +1,17 @@
 package com.sparta.snackback.dm.service;
 
-import com.sparta.snackback.dm.entity.DmBar;
+import com.sparta.snackback.dm.dto.DMDto;
+import com.sparta.snackback.dm.entity.DM;
+import com.sparta.snackback.dm.entity.DMJoiner;
+import com.sparta.snackback.dm.repository.DMJoinerRepository;
 import com.sparta.snackback.dm.repository.DmBarRepository;
+import com.sparta.snackback.user.entity.User;
+import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -13,8 +20,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DmBarService {
 
-    private Map<String, DmBar> dmBars;
+//    private Map<String, DM> dmBars;
     private final DmBarRepository dmBarRepository;
+    private final DMJoinerRepository dmJoinerRepository;
+    private final UserRepository userRepository;
+
 
 //    @PostConstruct //의존성 주입 후 실행되는 코드
 //    private void init() {
@@ -22,25 +32,38 @@ public class DmBarService {
 //    }
 
     //디엠 바 불러오기
-    public List<DmBar> findAllDm() {
+    public List<DM> findAllDm() {
 
         //디엠 최근 생성 순으로 반환
-        List<DmBar> result = dmBarRepository.findAllByOrderByCreatedAtDesc();
+        List<DM> result = dmBarRepository.findAllByOrderByCreatedAtDesc();
 
         return result;
     }
 
     //디엠방 하나 불러오기
-    public Optional<DmBar> findById(Long dmId){
+    public Optional<DM> findById(Long dmId){
         return dmBarRepository.findById(dmId);
     }
 
+
     //디엠 생성
-    public DmBar createDm(String title) {
+    @Transactional
+    public ResponseEntity<DMDto> createDm(List<Long> userList) {
 
-        DmBar dmBar = dmBarRepository.saveAndFlush(new DmBar(title));
+        String uuid = UUID.randomUUID().toString();
 
-        return dmBar;
+        DM dm = dmBarRepository.saveAndFlush(new DM(uuid));
+
+
+        for(Long userId : userList){
+            User user = userRepository.findById(userId).orElseThrow(
+                    ()-> new IllegalArgumentException("유효하지 않은 사용자입니다.")
+            );
+
+            DMJoiner dmJoiner = dmJoinerRepository.saveAndFlush(new DMJoiner(user,dm));
+        }
+
+        return ResponseEntity.ok().body(DMDto.of(dm));
 
     }
 
