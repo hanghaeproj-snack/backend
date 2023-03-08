@@ -2,19 +2,27 @@ package com.sparta.snackback.channel.dto;
 
 import lombok.Getter;
 
-@Getter
 public class ChannelChatMessageDto {
 
     public enum MessageType {
         ENTER, TALK
     }
 
-    private MessageType type;
-    private String roomId;
-    private String sender;
-    private String date;
+    @Getter
+    public static class Send {
 
-    public void setDate(String date) {
-        this.date = date;
+        private MessageType type;
+        private String roomId;
+        private String sender;
+        private String message;
+
+        public void setMessage(String message) {
+        this.message = message;
+        }
+
     }
+
+//    @Getter
+//    public static class
+
 }

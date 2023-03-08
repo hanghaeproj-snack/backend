@@ -20,17 +20,17 @@ public class ChannelChatController {
 
     // 채널 채팅방 입장 API
     @MessageMapping("/channel/chat/enter")
-    public void enter(ChannelChatMessageDto message) {
-        log.info("### {}", message.getSender() + " 참여");
-        message.setDate(message.getSender() + " 참여");
-        template.convertAndSend("/sub/topic/channel/room/" + message.getRoomId(), message);
+    public void enter(ChannelChatMessageDto.Send send) {
+        log.info("### {}", send.getSender() + " 참여");
+        send.setMessage(send.getSender() + " 참여");
+        template.convertAndSend("/topic/channel/room/" + send.getRoomId(), send);
     }
 
     // 채널 채팅방 채팅 API
     @MessageMapping("/channel/chat/message")
-    public void message(ChannelChatMessageDto message) {
-        log.info("### {}", message.getSender() + ": " + message.getDate());
-        template.convertAndSend("/sub/topic/channel/room/" + message.getRoomId(), message);
+    public void message(ChannelChatMessageDto.Send send) {
+        log.info("### {}", send.getSender() + ": " + send.getMessage());
+        template.convertAndSend("/topic/channel/room/" + send.getRoomId(), send);
     }
 
 }
