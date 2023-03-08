@@ -1,6 +1,6 @@
 package com.sparta.snackback.dm.dto;
 
-import com.sparta.snackback.dm.entity.DmMessage;
+import com.sparta.snackback.dm.entity.DMMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +23,9 @@ public class DmMessageDto {
     private String user;
     private String message;
 
-    public DmMessageDto(DmMessage message) {
-        this.user = message.getDmUser();
-        this.message = message.getDmMessage();
+    public DmMessageDto(DMMessage message) {
+//        this.user = message.getDmUser();
+//        this.message = message.getDmMessage();
     }
     
 }
