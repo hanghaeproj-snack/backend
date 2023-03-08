@@ -37,7 +37,7 @@ public class DmMessage extends Timestamped {
     private Long dmBar;
 
     public DmMessage(DmMessageDto dmMessageDto){
-        this.dmUser = dmMessageDto.getUser();
+        this.dmUser = dmMessageDto.getNickname();
         this.dmMessage = dmMessageDto.getMessage();
         this.dmBar = dmMessageDto.getDmId();
     }

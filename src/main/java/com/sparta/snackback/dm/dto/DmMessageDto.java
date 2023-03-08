@@ -20,11 +20,12 @@ public class DmMessageDto {
     private MessageType type;
 
     private Long dmId;
-    private String user;
+    private String nickname;
     private String message;
+    private String uuid;
 
     public DmMessageDto(DmMessage message) {
-        this.user = message.getDmUser();
+        this.nickname = message.getDmUser();
         this.message = message.getDmMessage();
     }
     
