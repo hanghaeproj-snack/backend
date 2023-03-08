@@ -39,7 +39,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console())
+//                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -68,17 +68,24 @@ public class WebSecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.addAllowedOrigin("http://localhost:3000");
-        corsConfig.addExposedHeader("Authorization");
-        //모든 메서드 허용
-        corsConfig.addAllowedMethod("*");
-        //모든 헤더 허용
-        corsConfig.addExposedHeader("*");
-        corsConfig.setAllowCredentials(true);
-        corsConfig.validateAllowCredentials();
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.addAllowedOrigin("http://localhost:3000");
+
+        config.addExposedHeader(JwtUtil.AUTHORIZATION_HEADER);
+
+        config.addAllowedMethod("*");
+
+        config.addAllowedHeader("Content-Type");
+        config.addAllowedHeader(JwtUtil.AUTHORIZATION_HEADER);
+
+        config.setAllowCredentials(true);
+
+        config.validateAllowCredentials();
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig);
+        source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 

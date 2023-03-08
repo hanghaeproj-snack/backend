@@ -19,7 +19,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false) // 닉네임 중복가능
+    @Column(nullable = false)
     private String nickname;
 
     @Column

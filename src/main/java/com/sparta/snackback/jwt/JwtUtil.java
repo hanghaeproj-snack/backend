@@ -28,7 +28,7 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization"; // Header key
     public static final String AUTHORIZATION_KEY = "auth"; // 사용자 권한값 Key
-    private static final String BEARER_PREFIX = "Bearer"; // Token 식별자
+    private static final String BEARER_PREFIX = "Bearer "; // Token 식별자
     private static final long TOKEN_TIME = 60 * 60 * 1000L; // Token 만료시간 (ms기준 -> 1시간설정)
 
     @Value("${jwt.secret.key}")
