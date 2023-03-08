@@ -23,17 +23,17 @@ public class DmBarController {
 
     private final DmBarService dmBarService;
 
-    //dm 리스트 화면
-    @GetMapping("/room")
-    public String rooms(Model model) {
-        return "/chat/room";
-    }
+//    //dm 리스트 화면
+//    @GetMapping("/room")
+//    public String rooms(Model model) {
+//        return "/chat/room";
+//    }
 
-    //모든 dm 목록 반환
-    @GetMapping("/rooms")
+    //DM 바 조회 >> 로그인한 유저가 속해있는 모든 DM 조회
+    @GetMapping()
     @ResponseBody
-    public List<DM> room() {
-        return dmBarService.findAllDm();
+    public ResponseEntity<List<DMDto>> getAllDm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return dmBarService.getAllDm(userDetails.getUser());
     }
 
     //dm 생성

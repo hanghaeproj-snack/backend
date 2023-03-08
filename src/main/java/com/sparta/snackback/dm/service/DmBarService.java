@@ -4,7 +4,7 @@ import com.sparta.snackback.dm.dto.DMDto;
 import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.entity.DMJoiner;
 import com.sparta.snackback.dm.repository.DMJoinerRepository;
-import com.sparta.snackback.dm.repository.DmBarRepository;
+import com.sparta.snackback.dm.repository.DMRepository;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,29 +20,41 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DmBarService {
 
-//    private Map<String, DM> dmBars;
-    private final DmBarRepository dmBarRepository;
+    private final DMRepository DMRepository;
     private final DMJoinerRepository dmJoinerRepository;
     private final UserRepository userRepository;
 
 
-//    @PostConstruct //의존성 주입 후 실행되는 코드
-//    private void init() {
-//        dmBars = new LinkedHashMap<>();
-//    }
+    @Transactional(readOnly = true)
+    //디엠 바 조회
+    public ResponseEntity<List<DMDto>> getAllDm(User user) {
 
-    //디엠 바 불러오기
-    public List<DM> findAllDm() {
+        List<DMJoiner> dmJoinerList = dmJoinerRepository.findAllByUserId(user.getId());
+        List<DMDto> dmDtoList = new ArrayList<>();
 
-        //디엠 최근 생성 순으로 반환
-        List<DM> result = dmBarRepository.findAllByOrderByCreatedAtDesc();
+        for(DMJoiner dmJoiner : dmJoinerList){
+            String title = "";
 
-        return result;
+            DM dm = DMRepository.findById(dmJoiner.getDm().getId()).orElseThrow(
+                    ()-> new IllegalArgumentException("없는 디엠입니당"));
+
+            List<DMJoiner> dmUserList = dmJoinerRepository.findAllByDmId(dm.getId());
+
+            for(DMJoiner dmUser : dmUserList){
+                String nickname = userRepository.findById(dmUser.getUser().getId()).orElseThrow(
+                        ()-> new IllegalArgumentException("없는 유저입니다.")).getNickname();
+                title +=nickname +", ";
+            }
+
+            dmDtoList.add(new DMDto(dm,title));
+        }
+
+        return ResponseEntity.ok().body(dmDtoList);
     }
 
     //디엠방 하나 불러오기
     public Optional<DM> findById(Long dmId){
-        return dmBarRepository.findById(dmId);
+        return DMRepository.findById(dmId);
     }
 
 
@@ -52,7 +64,7 @@ public class DmBarService {
 
         String uuid = UUID.randomUUID().toString();
 
-        DM dm = dmBarRepository.saveAndFlush(new DM(uuid));
+        DM dm = DMRepository.saveAndFlush(new DM(uuid));
 
 
         for(Long userId : userList){

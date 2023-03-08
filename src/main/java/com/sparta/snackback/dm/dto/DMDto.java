@@ -27,10 +27,18 @@ public class DMDto {
         this.uuid = dm.getUuid();
     }
 
+    public DMDto(DM dm, String title) {
+        this.id = dm.getId();
+        this.title = title;
+        this.uuid = dm.getUuid();
+    }
+
     public static DMDto of(DM dm){
         return DMDto.builder()
                 .dm(dm)
                 .build();
     }
+
+
 
 }
