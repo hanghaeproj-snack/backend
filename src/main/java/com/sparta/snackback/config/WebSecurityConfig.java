@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/channel/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/channel/").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 

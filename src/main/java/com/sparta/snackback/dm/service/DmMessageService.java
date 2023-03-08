@@ -22,7 +22,7 @@ public class DmMessageService {
     public void sendDmMessage(DmMessageDto message){
 
         if(message.getType().equals(DmMessageDto.MessageType.ENTER)){
-            message.setMessage(message.getNickname() + "님이 입장하셨습니다.");
+            message.setMessage(message.getUser() + "님이 입장하셨습니다.");
         }
 
         DMMessage dmMessage = dmMessageRepository.saveAndFlush(new DMMessage(message));
