@@ -4,7 +4,7 @@ import com.sparta.snackback.user.entity.User;
 import lombok.Getter;
 
 @Getter
-public class LoginResponseDto {// 로그인 -> body에 반환
+public class LoginResponseDto {
     private String email;
     private String nickname;
 

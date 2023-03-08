@@ -23,9 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity // 스프링 Security 지원을 가능하게 함
-@EnableGlobalMethodSecurity(securedEnabled = true)
-@Secured({}) //어노테이션 활성화
+@EnableWebSecurity
 public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
 
@@ -34,12 +32,9 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-//                .requestMatchers(PathRequest.toH2Console())
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
@@ -47,21 +42,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().antMatchers("/api/auth/**").permitAll()
-//                .antMatchers("/api/search").permitAll()
-//                .antMatchers("/api/shop").permitAll()
                 .anyRequest().authenticated()
-                // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         http.cors();
-
-//        http.formLogin().loginPage("/api/user/login-page").permitAll();
-//
-//        http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 
         return http.build();
     }

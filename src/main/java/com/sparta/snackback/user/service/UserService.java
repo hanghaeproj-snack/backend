@@ -35,18 +35,16 @@ public class UserService {
 
         String nickname = signupRequestDto.getNickname();
 
-        // 관리자권한
         UserRoleEnum role = UserRoleEnum.USER;
-        if (signupRequestDto.isAdmin()) { // Admin true
+        if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new IllegalArgumentException("관리자 암호 오류로 등록이 불가능합니다.");
             }
-            role = UserRoleEnum.ADMIN; // 관리자권한 전환
+            role = UserRoleEnum.ADMIN;
         }
         User user = new User(email, password, nickname, role);
         userRepository.save(user);
 
-        // response body
         StatusMsgResponseDto statusMsgResponseDto = new StatusMsgResponseDto("회원가입 완료", HttpStatus.OK);
         return statusMsgResponseDto;
     }
@@ -57,20 +55,17 @@ public class UserService {
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
 
-        // 이메일 확인
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("등록된 이메일이 아닙니다.")
         );
 
-        // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail(), user.getRole()));
 
-        // response body
         LoginResponseDto loginResponseDto = new LoginResponseDto(user);
-        return loginResponseDto; // 로그인 -> body에 email, nickname 반환
+        return loginResponseDto;
     }
 
     // 중복확인
@@ -78,9 +73,8 @@ public class UserService {
     public void emailCheck(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
 
-        // 해당 이메일 사용자가 있는지 확인
         Optional<User> findEmail = userRepository.findByEmail(email);
-        // 예외처리
+
         if (findEmail.isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }

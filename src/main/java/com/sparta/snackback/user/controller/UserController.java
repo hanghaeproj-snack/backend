@@ -36,7 +36,6 @@ public class UserController {
     @PostMapping("/check")
     public StatusMsgResponseDto emailCheck(@RequestBody LoginRequestDto loginRequestDto) {
         userService.emailCheck(loginRequestDto);
-        StatusMsgResponseDto statusMsgResponseDto = new StatusMsgResponseDto("이메일 중복확인 완료", HttpStatus.OK);
-        return statusMsgResponseDto;
+        return new StatusMsgResponseDto("이메일 중복확인 완료", HttpStatus.OK);
     }
 }
