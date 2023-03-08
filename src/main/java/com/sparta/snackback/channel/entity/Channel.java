@@ -1,6 +1,7 @@
 package com.sparta.snackback.channel.entity;
 
 import com.sparta.snackback.channel.dto.ChannelRoomDto;
+import com.sparta.snackback.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,10 +23,15 @@ public class Channel {
     @Column(nullable = false)
     private Boolean isShow;
 
-    public Channel(ChannelRoomDto.Request request) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Channel(ChannelRoomDto.Request request, User user) {
         this.uuid = UUID.randomUUID().toString();
         this.title = request.getTitle();
         this.isShow = true;
+        this.user = user;
     }
 
     public void delete(Boolean isShow) {
