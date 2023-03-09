@@ -1,15 +1,13 @@
 package com.sparta.snackback.user.service;
 
-import com.sparta.snackback.user.dto.LoginRequestDto;
-import com.sparta.snackback.user.dto.LoginResponseDto;
-import com.sparta.snackback.user.dto.SignupRequestDto;
-import com.sparta.snackback.user.dto.StatusMsgResponseDto;
+import com.sparta.snackback.user.dto.*;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.entity.UserRoleEnum;
 import com.sparta.snackback.jwt.JwtUtil;
 import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,4 +77,19 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
     }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ProfileDto> getProfile(User user) {
+
+        User info = userRepository.findById(user.getId()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저 입니다.")
+        );
+
+        ProfileDto profileDto = new ProfileDto(info);
+
+        return ResponseEntity.ok().body(profileDto);
+    }
+
+
+
 }
