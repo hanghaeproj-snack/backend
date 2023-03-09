@@ -1,6 +1,7 @@
 package com.sparta.snackback.dm.controller;
 
 import com.sparta.snackback.dm.dto.DMDto;
+import com.sparta.snackback.dm.dto.InviteDto;
 import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.service.DmBarService;
 import com.sparta.snackback.security.user.UserDetailsImpl;
@@ -44,9 +45,11 @@ public class DmBarController {
         return dmBarService.createDm(userList);
     }
 
-//    @GetMapping("/invite")
-//    @ResponseBody
-//    public ResponseEntity<>
+    @GetMapping("/invite")
+    @ResponseBody
+    public ResponseEntity<List<InviteDto>> invite(){
+        return dmBarService.invite();
+    }
 
 
     //특정 dm 조회(dm 클릭)
