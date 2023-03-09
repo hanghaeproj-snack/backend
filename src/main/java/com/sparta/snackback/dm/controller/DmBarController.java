@@ -44,15 +44,12 @@ public class DmBarController {
         return dmBarService.createDm(userList);
     }
 
-    //dm 입장 화면
-    @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable Long roomId) {
+//    @GetMapping("/invite")
+//    @ResponseBody
+//    public ResponseEntity<>
 
-        model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
-    }
 
-    //특정 dm 조회
+    //특정 dm 조회(dm 클릭)
     @GetMapping("/room/{roomId}")
     @ResponseBody
     public Optional<DM> roomInfo(@PathVariable Long roomId) {

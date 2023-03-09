@@ -28,8 +28,10 @@ public class DmMessageController {
     public void enter(DmMessageDto message) {
         log.info(message.getNickname() + " : " + message.getMessage());
 
-        sendingOperations.convertAndSend("/sub/topic/dm/message/"+ message.getUuid(),message);
         dmMessageService.sendDmMessage(message);
+
+
+        sendingOperations.convertAndSend("/sub/topic/dm/message/"+ message.getUuid(),message);
     }
 
     @GetMapping("/api/dm/message")

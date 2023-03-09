@@ -33,20 +33,25 @@ public class DmBarService {
         List<DMDto> dmDtoList = new ArrayList<>();
 
         for(DMJoiner dmJoiner : dmJoinerList){
-            String title = "";
+            StringBuilder title = new StringBuilder();
 
             DM dm = DMRepository.findById(dmJoiner.getDm().getId()).orElseThrow(
                     ()-> new IllegalArgumentException("없는 디엠입니당"));
 
             List<DMJoiner> dmUserList = dmJoinerRepository.findAllByDmId(dm.getId());
 
-            for(DMJoiner dmUser : dmUserList){
-                String nickname = userRepository.findById(dmUser.getUser().getId()).orElseThrow(
+            for(int i = 0; i < dmUserList.size(); i++) {
+                String nickname = userRepository.findById(dmUserList.get(i).getUser().getId()).orElseThrow(
                         ()-> new IllegalArgumentException("없는 유저입니다.")).getNickname();
-                title +=nickname +", ";
+
+                if (i == dmUserList.size() - 1) {
+                    title.append(nickname);
+                } else {
+                    title.append(nickname).append(", ");
+                }
             }
 
-            dmDtoList.add(new DMDto(dm,title));
+            dmDtoList.add(new DMDto(dm, title.toString()));
         }
 
         return ResponseEntity.ok().body(dmDtoList);
