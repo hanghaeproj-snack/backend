@@ -5,10 +5,13 @@ import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.entity.DMMessage;
 import com.sparta.snackback.dm.repository.DMRepository;
 import com.sparta.snackback.dm.repository.DmMessageRepository;
+import com.sparta.snackback.exception.CustomException;
+import com.sparta.snackback.exception.ErrorCode;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
@@ -47,13 +50,20 @@ public class DmMessageService {
 //        sendingOperations.convertAndSend("/topic/chat/room" + message.getDmId(),message);
     }
 
-    public List<DmMessageDto> getMessages(String uuid) {
-//        List<DMMessage> DMMessageList = dmMessageRepository.findByDmBarOrderByCreatedAtDesc(dmId);
+    public ResponseEntity<List<DmMessageDto>> getMessages(Long id) {
+        List<DMMessage> DMMessageList = dmMessageRepository.findAllByDm_IdOrderByCreatedAtAsc(id);
         List<DmMessageDto> dmMessageDtoList = new ArrayList<>();
 
+        for (DMMessage dmMessage : DMMessageList){
+            User user = userRepository.findById(dmMessage.getUser().getId()).orElseThrow(
+                    ()-> new CustomException(ErrorCode.UNREGISTER_USER)
+            );
+
+            dmMessageDtoList.add(new DmMessageDto(dmMessage,user));
+        }
 
 
-        return dmMessageDtoList;
+        return ResponseEntity.ok().body(dmMessageDtoList);
     }
 
     //끝

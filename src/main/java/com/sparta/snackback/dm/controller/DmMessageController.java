@@ -6,6 +6,7 @@ import com.sparta.snackback.dm.service.DmMessageService;
 import com.sparta.snackback.security.user.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,8 +35,9 @@ public class DmMessageController {
         sendingOperations.convertAndSend("/sub/topic/dm/message/"+ message.getUuid(),message);
     }
 
+    //예전 기록 조회
     @GetMapping("/api/dm/message")
-    public List<DmMessageDto> getMessages(@RequestParam String id){
+    public ResponseEntity<List<DmMessageDto>> getMessages(@RequestParam Long id){
         return dmMessageService.getMessages(id);
     }
 

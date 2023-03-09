@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface DmMessageRepository extends JpaRepository<DMMessage,Long> {
 
-//    List<DMMessage> findByDmBarOrderByCreatedAtDesc(Long dmId);
+    List<DMMessage> findAllByDm_IdOrderByCreatedAtAsc(Long dmId);
 }
