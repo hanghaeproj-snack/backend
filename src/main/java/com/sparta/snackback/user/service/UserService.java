@@ -4,9 +4,7 @@ import com.sparta.snackback.common.dto.SendMessageDto;
 import com.sparta.snackback.common.util.SuccessCode;
 import com.sparta.snackback.exception.CustomException;
 import com.sparta.snackback.exception.ErrorCode;
-import com.sparta.snackback.user.dto.LoginRequestDto;
-import com.sparta.snackback.user.dto.LoginResponseDto;
-import com.sparta.snackback.user.dto.SignupRequestDto;
+import com.sparta.snackback.user.dto.*;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.entity.UserRoleEnum;
 import com.sparta.snackback.security.jwt.JwtUtil;
@@ -85,4 +83,19 @@ public class UserService {
 
         return SendMessageDto.toResponseEntity(SuccessCode.CHECKUP_SUCCESS);
     }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ProfileDto> getProfile(User user) {
+
+        User info = userRepository.findById(user.getId()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저 입니다.")
+        );
+
+        ProfileDto profileDto = new ProfileDto(info);
+
+        return ResponseEntity.ok().body(profileDto);
+    }
+
+
+
 }

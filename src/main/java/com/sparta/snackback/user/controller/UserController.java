@@ -1,40 +1,45 @@
 package com.sparta.snackback.user.controller;
 
 import com.sparta.snackback.common.dto.SendMessageDto;
-import com.sparta.snackback.user.dto.LoginRequestDto;
-import com.sparta.snackback.user.dto.LoginResponseDto;
-import com.sparta.snackback.user.dto.SignupRequestDto;
+import com.sparta.snackback.security.user.UserDetailsImpl;
+import com.sparta.snackback.user.dto.*;
 import com.sparta.snackback.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
 
     // 회원가입
-    @PostMapping("/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity<SendMessageDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         return userService.signup(signupRequestDto);
     }
 
     // 로그인
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto, response);
     }
 
     // 중복확인
-    @PostMapping("/check")
+    @PostMapping("/auth/check")
     public ResponseEntity<SendMessageDto> emailCheck(@RequestBody LoginRequestDto loginRequestDto) {
         return userService.emailCheck(loginRequestDto);
     }
+
+    //내 프로필 조회
+    @GetMapping("/user/profile")
+    public ResponseEntity<ProfileDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getProfile(userDetails.getUser());
+    }
+
 }
