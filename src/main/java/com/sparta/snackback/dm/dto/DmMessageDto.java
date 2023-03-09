@@ -21,7 +21,7 @@ public class DmMessageDto {
 
     private Long dmId;
     private String nickname;
-    private String inputMsg;
+    private String message;
     private String uuid;
 
     public DmMessageDto(DMMessage message) {

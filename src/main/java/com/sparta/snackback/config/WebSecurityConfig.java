@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/stomp/chat/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/channel/").hasRole("ADMIN")
                 .anyRequest().authenticated();
 

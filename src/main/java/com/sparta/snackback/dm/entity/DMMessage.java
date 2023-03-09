@@ -29,7 +29,7 @@ public class DMMessage extends Timestamped {
     private DMJoiner dmJoiner;
 
     public DMMessage(DmMessageDto dmMessageDto) {
-        this.contents = dmMessageDto.getInputMsg();
+        this.contents = dmMessageDto.getMessage();
 
     }
 
