@@ -3,7 +3,7 @@ package com.sparta.snackback.dm.controller;
 import com.sparta.snackback.dm.dto.DMDto;
 import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.service.DmBarService;
-import com.sparta.snackback.security.UserDetailsImpl;
+import com.sparta.snackback.security.user.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;

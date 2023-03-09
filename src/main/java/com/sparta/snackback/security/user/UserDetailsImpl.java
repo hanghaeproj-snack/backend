@@ -1,4 +1,4 @@
-package com.sparta.snackback.security;
+package com.sparta.snackback.security.user;
 
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.entity.UserRoleEnum;

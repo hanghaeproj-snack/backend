@@ -2,12 +2,11 @@ package com.sparta.snackback.channel.controller;
 
 import com.sparta.snackback.channel.dto.ChannelRoomDto;
 import com.sparta.snackback.channel.service.ChannelService;
-import com.sparta.snackback.security.UserDetailsImpl;
+import com.sparta.snackback.security.user.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,7 +1,7 @@
-package com.sparta.snackback.jwt;
+package com.sparta.snackback.security.jwt;
 
 
-import com.sparta.snackback.security.UserDetailsServiceImpl;
+import com.sparta.snackback.security.user.UserDetailsServiceImpl;
 import com.sparta.snackback.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

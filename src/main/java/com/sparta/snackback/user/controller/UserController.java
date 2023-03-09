@@ -1,12 +1,12 @@
 package com.sparta.snackback.user.controller;
 
+import com.sparta.snackback.common.dto.SendMessageDto;
 import com.sparta.snackback.user.dto.LoginRequestDto;
 import com.sparta.snackback.user.dto.LoginResponseDto;
 import com.sparta.snackback.user.dto.SignupRequestDto;
-import com.sparta.snackback.user.dto.StatusMsgResponseDto;
 import com.sparta.snackback.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public StatusMsgResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<SendMessageDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         return userService.signup(signupRequestDto);
     }
 
@@ -34,8 +34,7 @@ public class UserController {
 
     // 중복확인
     @PostMapping("/check")
-    public StatusMsgResponseDto emailCheck(@RequestBody LoginRequestDto loginRequestDto) {
-        userService.emailCheck(loginRequestDto);
-        return new StatusMsgResponseDto("이메일 중복확인 완료", HttpStatus.OK);
+    public ResponseEntity<SendMessageDto> emailCheck(@RequestBody LoginRequestDto loginRequestDto) {
+        return userService.emailCheck(loginRequestDto);
     }
 }
