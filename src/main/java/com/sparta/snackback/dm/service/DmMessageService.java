@@ -1,8 +1,12 @@
 package com.sparta.snackback.dm.service;
 
 import com.sparta.snackback.dm.dto.DmMessageDto;
+import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.entity.DMMessage;
+import com.sparta.snackback.dm.repository.DMRepository;
 import com.sparta.snackback.dm.repository.DmMessageRepository;
+import com.sparta.snackback.user.entity.User;
+import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -18,14 +22,28 @@ public class DmMessageService {
 
     private final SimpMessageSendingOperations sendingOperations;
     private final DmMessageRepository dmMessageRepository;
+    private final UserRepository userRepository;
+
+    private final DMRepository dmRepository;
 
     public void sendDmMessage(DmMessageDto message){
 
-        if(message.getType().equals(DmMessageDto.MessageType.ENTER)){
-            message.setInputMsg(message.getNickname() + "님이 입장하셨습니다.");
-        }
+//        if(message.getType().equals(DmMessageDto.MessageType.ENTER)){
+//            message.setMessage(message.getNickname() + "님이 입장하셨습니다.");
+//        }
 
-        DMMessage dmMessage = dmMessageRepository.saveAndFlush(new DMMessage(message));
+        DM dm = dmRepository.findById(message.getDmId()).orElseThrow(
+                ()-> new IllegalArgumentException("디엠 없음")
+        );
+
+        User user = userRepository.findByEmail(message.getEmail()).orElseThrow(
+                ()-> new IllegalArgumentException("없는 유저임")
+        );
+
+        DMMessage dmMessage = dmMessageRepository.saveAndFlush(new DMMessage(message,dm,user));
+
+        Long id = dmMessage.getId();
+        message.setId(id);
 //        sendingOperations.convertAndSend("/topic/chat/room" + message.getDmId(),message);
     }
 

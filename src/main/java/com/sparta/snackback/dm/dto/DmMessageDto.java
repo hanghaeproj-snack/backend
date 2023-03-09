@@ -13,16 +13,18 @@ import lombok.Setter;
 public class DmMessageDto {
 
 
-        public enum MessageType{
-        ENTER,TALK
-    }
-
-    private MessageType type;
+//        public enum MessageType{
+//        ENTER,TALK
+//    }
+//
+//    private MessageType type;
 
     private Long dmId;
+    private String email;
     private String nickname;
-    private String inputMsg;
+    private String message;
     private String uuid;
+    private Long id;
 
     public DmMessageDto(DMMessage message) {
 //        this.user = message.getDmUser();
