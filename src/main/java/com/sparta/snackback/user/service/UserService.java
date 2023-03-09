@@ -106,7 +106,8 @@ public class UserService {
 
         String storedFileName = s3Uploader.upload(image,"profile");
         ProfileDto profileDto =new ProfileDto(nickname,storedFileName);
-        user.update(profileDto);
+
+        userRepository.findById(profileDto.getImage(), profileDto.getNickname(), user.getId());
 
         return ResponseEntity.ok().body(profileDto);
     }

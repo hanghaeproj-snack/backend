@@ -29,7 +29,7 @@ public class DmMessageService {
 
     private final DMRepository dmRepository;
 
-    public void sendDmMessage(DmMessageDto message){
+    public DmMessageDto sendDmMessage(DmMessageDto message){
 
 //        if(message.getType().equals(DmMessageDto.MessageType.ENTER)){
 //            message.setMessage(message.getNickname() + "님이 입장하셨습니다.");
@@ -47,7 +47,8 @@ public class DmMessageService {
 
         Long id = dmMessage.getId();
         message.setId(id);
-//        sendingOperations.convertAndSend("/topic/chat/room" + message.getDmId(),message);
+
+        return new DmMessageDto(dmMessage, user);
     }
 
     public ResponseEntity<List<DmMessageDto>> getMessages(Long id) {

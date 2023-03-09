@@ -23,6 +23,7 @@ public class DmMessageDto {
     private Long dmId;
     private String email;
     private String nickname;
+    private String image;
     private String message;
     private String uuid;
     private Long id;
@@ -31,6 +32,7 @@ public class DmMessageDto {
         this.id = message.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
+        this.image = user.getImage();
         this.message = message.getContents();
     }
     

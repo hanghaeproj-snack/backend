@@ -29,10 +29,10 @@ public class DmMessageController {
     public void enter(DmMessageDto message) {
         log.info(message.getNickname() + " : " + message.getMessage());
 
-        dmMessageService.sendDmMessage(message);
+        DmMessageDto dmMessageDto = dmMessageService.sendDmMessage(message);
 
 
-        sendingOperations.convertAndSend("/sub/topic/dm/message/"+ message.getUuid(),message);
+        sendingOperations.convertAndSend("/sub/topic/dm/message/" + message.getUuid(), dmMessageDto);
     }
 
     //예전 기록 조회
