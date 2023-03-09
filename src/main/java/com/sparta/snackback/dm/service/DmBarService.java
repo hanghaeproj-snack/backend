@@ -1,6 +1,7 @@
 package com.sparta.snackback.dm.service;
 
 import com.sparta.snackback.dm.dto.DMDto;
+import com.sparta.snackback.dm.dto.InviteDto;
 import com.sparta.snackback.dm.entity.DM;
 import com.sparta.snackback.dm.entity.DMJoiner;
 import com.sparta.snackback.dm.repository.DMJoinerRepository;
@@ -84,4 +85,16 @@ public class DmBarService {
 
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<InviteDto>> invite() {
+        List<User> userList = userRepository.findAll();
+
+        List<InviteDto> inviteDtoList = new ArrayList<>();
+        for (User user : userList) {
+            System.out.println("user.getId = " + user.getId());
+            System.out.println("user.getNickname = " + user.getNickname());
+            inviteDtoList.add(new InviteDto(user));
+        }
+        return ResponseEntity.ok().body(inviteDtoList);
+    }
 }
