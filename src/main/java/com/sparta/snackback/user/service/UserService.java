@@ -4,6 +4,7 @@ import com.sparta.snackback.common.dto.SendMessageDto;
 import com.sparta.snackback.common.util.SuccessCode;
 import com.sparta.snackback.exception.CustomException;
 import com.sparta.snackback.exception.ErrorCode;
+import com.sparta.snackback.image.service.S3Uploader;
 import com.sparta.snackback.user.dto.*;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.entity.UserRoleEnum;
@@ -16,8 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -26,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final S3Uploader s3Uploader;
 
     // ADMIN_TOKEN
     @Value("${admin.token}")
@@ -97,5 +101,13 @@ public class UserService {
     }
 
 
+    @Transactional
+    public ResponseEntity<ProfileDto> changeProfile(MultipartFile image, String nickname, User user) throws IOException {
 
+        String storedFileName = s3Uploader.upload(image,"profile");
+        ProfileDto profileDto =new ProfileDto(nickname,storedFileName);
+        user.update(profileDto);
+
+        return ResponseEntity.ok().body(profileDto);
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,6 +41,13 @@ public class UserController {
     @GetMapping("/user/profile")
     public ResponseEntity<ProfileDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getProfile(userDetails.getUser());
+    }
+
+    //내 프로필 수정
+    @PatchMapping("/user/profile")
+    public ResponseEntity<ProfileDto> changeProfile(@RequestPart MultipartFile image, @RequestPart String nickname  ,@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+
+        return userService.changeProfile(image,nickname, userDetails.getUser());
     }
 
 }

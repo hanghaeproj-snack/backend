@@ -1,5 +1,6 @@
 package com.sparta.snackback.user.entity;
 
+import com.sparta.snackback.user.dto.ProfileDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,5 +35,10 @@ public class User {
         this.password = password;
         this.nickname = nickname;
         this.role = role;
+    }
+
+    public void update(ProfileDto profileDto){
+        this.image = profileDto.getImage();
+        this.nickname = profileDto.getNickname();
     }
 }
