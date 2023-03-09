@@ -15,4 +15,9 @@ public class ProfileDto {
         this.nickname = user.getNickname();
         this.image = user.getImage();
     }
+
+    public ProfileDto(String nickname, String image) {
+        this.nickname = nickname;
+        this.image = image;
+    }
 }
