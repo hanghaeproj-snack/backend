@@ -26,6 +26,8 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    private String image;
+
     // 생성자 -> 값 초기화
     public User(String email, String password, String nickname, UserRoleEnum role) {
         this.email = email;
