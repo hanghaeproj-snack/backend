@@ -1,12 +1,17 @@
 package com.sparta.snackback.user.service;
 
+import com.sparta.snackback.common.dto.SendMessageDto;
+import com.sparta.snackback.common.util.SuccessCode;
+import com.sparta.snackback.exception.CustomException;
+import com.sparta.snackback.exception.ErrorCode;
 import com.sparta.snackback.user.dto.*;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.entity.UserRoleEnum;
-import com.sparta.snackback.jwt.JwtUtil;
+import com.sparta.snackback.security.jwt.JwtUtil;
 import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,11 +28,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // ADMIN_TOKEN
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    @Value("${admin.token}")
+    private String ADMIN_TOKEN;
 
     // 회원가입
     @Transactional
-    public StatusMsgResponseDto signup(SignupRequestDto signupRequestDto) {
+    public ResponseEntity<SendMessageDto> signup(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
@@ -36,15 +42,14 @@ public class UserService {
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호 오류로 등록이 불가능합니다.");
+                throw new CustomException(ErrorCode.WRONG_ADMIN_TOKEN);
             }
             role = UserRoleEnum.ADMIN;
         }
         User user = new User(email, password, nickname, role);
         userRepository.save(user);
 
-        StatusMsgResponseDto statusMsgResponseDto = new StatusMsgResponseDto("회원가입 완료", HttpStatus.OK);
-        return statusMsgResponseDto;
+        return SendMessageDto.toResponseEntity(SuccessCode.SIGNUP_SUCCESS);
     }
 
     // 로그인
@@ -54,28 +59,29 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("등록된 이메일이 아닙니다.")
+                () -> new CustomException(ErrorCode.UNREGISTER_USER)
         );
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.WRONG_PASSWORD);
         }
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getEmail(), user.getRole()));
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto(user);
-        return loginResponseDto;
+        return new LoginResponseDto(user);
     }
 
     // 중복확인
     @Transactional(readOnly = true)
-    public void emailCheck(LoginRequestDto loginRequestDto) {
+    public ResponseEntity<SendMessageDto> emailCheck(LoginRequestDto loginRequestDto) {
         String email = loginRequestDto.getEmail();
 
         Optional<User> findEmail = userRepository.findByEmail(email);
 
         if (findEmail.isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
+
+        return SendMessageDto.toResponseEntity(SuccessCode.CHECKUP_SUCCESS);
     }
 
     @Transactional(readOnly = true)

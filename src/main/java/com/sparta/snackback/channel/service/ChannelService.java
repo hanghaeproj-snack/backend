@@ -8,6 +8,8 @@ import com.sparta.snackback.channel.entity.ChannelMessage;
 import com.sparta.snackback.channel.repository.ChannelJoinerRepository;
 import com.sparta.snackback.channel.repository.ChannelMessageRepository;
 import com.sparta.snackback.channel.repository.ChannelRepository;
+import com.sparta.snackback.exception.CustomException;
+import com.sparta.snackback.exception.ErrorCode;
 import com.sparta.snackback.user.entity.User;
 import com.sparta.snackback.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ public class ChannelService {
     public ResponseEntity<ChannelRoomDto.Response> createChannel(ChannelRoomDto.Request request, User user) {
         Optional<Channel> optionalChannel = channelRepository.findByTitle(request.getTitle());
         if (optionalChannel.isPresent()) {
-            throw new IllegalArgumentException("중복된 title");
+            throw new CustomException(ErrorCode.DUPLICATE_TITLE);
         }
 
         Channel channel = channelRepository.save(new Channel(request, user));
@@ -65,10 +67,10 @@ public class ChannelService {
     // 채널 초대
     @Transactional
     public void channelInvite(Long channelId, List<Long> userIdList) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채널"));
+        Channel channel = channelRepository.findById(channelId).orElseThrow(() -> new CustomException(ErrorCode.WRONG_CHANNEL));
 
         for (Long userId : userIdList) {
-            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+            User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.UNREGISTER_USER));
 
             channelJoinerRepository.save(new ChannelJoiner(channel, user));
         }
@@ -80,10 +82,10 @@ public class ChannelService {
      */
     @Transactional
     public ChannelChatMessageDto.Subscriber saveChannelMessage(ChannelChatMessageDto.Publisher publisher) {
-        Channel channel = channelRepository.findByUuid(publisher.getRoomId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채널"));
+        Channel channel = channelRepository.findByUuid(publisher.getRoomId()).orElseThrow(() -> new CustomException(ErrorCode.WRONG_CHANNEL));
         
         // 유저 존재 여부
-        User user = userRepository.findById(publisher.getUserId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저"));
+        User user = userRepository.findById(publisher.getUserId()).orElseThrow(() -> new CustomException(ErrorCode.UNREGISTER_USER));
 
         ChannelMessage channelMessage = channelMessageRepository.save(new ChannelMessage(channel, user, publisher));
         return new ChannelChatMessageDto.Subscriber(channelMessage);

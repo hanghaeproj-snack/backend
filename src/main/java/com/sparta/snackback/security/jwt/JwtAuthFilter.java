@@ -1,4 +1,4 @@
-package com.sparta.snackback.jwt;
+package com.sparta.snackback.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.snackback.user.dto.SecurityExceptionDto;
