@@ -33,7 +33,6 @@ public class DMMessage extends Timestamped {
         this.contents = dmMessageDto.getMessage();
         this.dm = dm;
         this.user = user;
-
     }
 
 

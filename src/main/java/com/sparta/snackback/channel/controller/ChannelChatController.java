@@ -27,7 +27,7 @@ public class ChannelChatController {
         log.info("### {}", publisher.getSender() + " 참여");
         publisher.setMessage(publisher.getSender() + " 참여");
 
-        template.convertAndSend("/topic/channel/room/" + publisher.getRoomId(), channelService.saveChannelMessage(publisher));
+        template.convertAndSend("/sub/topic/channel/room/" + publisher.getRoomId(), channelService.saveChannelMessage(publisher));
     }
 
     // 채널 채팅방 채팅 API
@@ -35,7 +35,7 @@ public class ChannelChatController {
     public void message(ChannelChatMessageDto.Publisher publisher) {
         log.info("### {}", publisher.getSender() + ": " + publisher.getMessage());
 
-        template.convertAndSend("/topic/channel/room/" + publisher.getRoomId(), channelService.saveChannelMessage(publisher));
+        template.convertAndSend("/sub/topic/channel/room/" + publisher.getRoomId(), channelService.saveChannelMessage(publisher));
     }
 
 }
