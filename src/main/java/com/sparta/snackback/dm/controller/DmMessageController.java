@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,15 +24,15 @@ public class DmMessageController {
 
     @MessageMapping("/chat/message")
     public void enter(DmMessageDto message) {
-        log.info(message.getUser() + " : " + message.getMessage());
+        log.info(message.getNickname() + " : " + message.getInputMsg());
 
-        sendingOperations.convertAndSend("/topic/chat/room/"+message.getDmId(),message);
+        sendingOperations.convertAndSend("/topic/dm/message/"+ message.getUuid(),message);
         dmMessageService.sendDmMessage(message);
     }
 
-    @GetMapping("/chat/message/enter/{dmId}")
-    public List<DmMessageDto> getMessages(@PathVariable Long dmId){
-        return dmMessageService.getMessages(dmId);
+    @GetMapping("/api/dm/message")
+    public List<DmMessageDto> getMessages(@RequestParam String id){
+        return dmMessageService.getMessages(id);
     }
 
 }
